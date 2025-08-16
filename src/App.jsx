@@ -9,7 +9,7 @@ import Navbar from './components/Navbar';
 import HomePage from './pages/Home/HomePage.jsx'
 import HomeScreen from './pages/Home/HomeScreen.jsx'
 import OtpPage from './pages/OtpPage'
-import { isTokenExpired } from './utils/checkTOken'
+import { isTokenExpired } from './utils/CheckToken.jsx'
 import MoviesPage from './pages/Home/MoviesPage'
 import PopularPage from './pages/Home/PopularPage'
 import TvShowsPage from './pages/Home/TvShowsPage'
