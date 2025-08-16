@@ -51,14 +51,14 @@ const LoginPage = () => {
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full px-4 py-3 rounded-md text-black"
+            className="w-full px-4 py-3 rounded-md text-white focus:outline-white border-2 border-white"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <button
             type="submit"
-            className="w-full py-3 bg-red-600 text-white text-lg font-semibold rounded-md hover:bg-red-700"
+            className="w-full py-3 bg-blue-600 text-white text-lg font-semibold rounded-md hover:bg-blue-700"
           >
             Send OTP
           </button>
