@@ -6,8 +6,8 @@ import LoginPage from './pages/LoginPage'
 import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import SignUpPage from './pages/SignUpPage';
 import Navbar from './components/Navbar';
-import HomePage from './pages/home/HomePage'
-import HomeScreen from './pages/home/HomeScreen'
+import HomePage from './pages/Home/HomePage.jsx'
+import HomeScreen from './pages/Home/HomeScreen.jsx'
 import OtpPage from './pages/OtpPage'
 import { isTokenExpired } from './utils/checkTOken'
 import MoviesPage from './pages/Home/MoviesPage'
