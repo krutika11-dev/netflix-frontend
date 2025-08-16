@@ -1,71 +1,81 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:4000");
+const socket = io("https://netflix-socket-kaeb.onrender.com"); 
+//const socket = io("http://localhost:5000");
 
-const ChatBot = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+export default function Chat() {
+    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [username, setUsername] = useState("");
 
-  useEffect(() => {
-    socket.on("newMsg", (msg) => {
-      setMessages((prev) => [...prev, { sender: "other", text: msg }]);
-    });
+    useEffect(() => {
+        // Ask username once
+        const name = prompt("Enter your name");
+        setUsername(name || "Anonymous");
 
-    return () => {
-      socket.off("newMsg");
+        // Receive messages
+        socket.on("receiveMessage", (data) => {
+            setMessages((prev) => [...prev, data]);
+        });
+
+        return () => {
+            socket.off("receiveMessage");
+        };
+    }, []);
+
+    const sendMessage = () => {
+        if (message.trim()) {
+            const newMessage = { text: message, sender: username };
+            socket.emit("sendMessage", newMessage);
+            setMessage("");
+        }
     };
-  }, []);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+    return (
+        <div style={{
+            maxWidth: "500px", margin: "20px auto", background: "#141414",
+            padding: "20px", borderRadius: "10px", color: "white", fontFamily: "Arial"
+        }}>
+            <h2 style={{ textAlign: "center", color: "#E50914" }}>Netflix Chat</h2>
 
-    const userMessage = { sender: "me", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+            <div style={{
+                background: "#222", padding: "10px", borderRadius: "8px",
+                height: "300px", overflowY: "auto", marginBottom: "10px"
+            }}>
+                {messages.map((msg, index) => (
+                    <div key={index} style={{
+                        textAlign: msg.sender === username ? "right" : "left",
+                        margin: "5px 0"
+                    }}>
+                        <strong>{msg.sender}: </strong>
+                        <span>{msg.text}</span>
+                    </div>
+                ))}
+            </div>
 
-    socket.emit("message", input);
-    setInput("");
-  };
-
-  return (
-    <div className="flex flex-col h-screen bg-black text-white">
-      <div className="p-4 bg-neutral-900 text-xl font-bold border-b border-neutral-700">
-        Netflix Chat
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`max-w-xs px-4 py-2 rounded-xl ${
-              msg.sender === "me"
-                ? "bg-red-600 ml-auto text-right"
-                : "bg-neutral-800 mr-auto"
-            }`}
-          >
-            {msg.text}
-          </div>
-        ))}
-      </div>
-
-      <div className="p-4 flex gap-2 border-t border-neutral-700">
-        <input
-          type="text"
-          placeholder="Type your message..."
-          className="flex-1 px-4 py-2 rounded-lg bg-neutral-800 text-white focus:outline-none"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        />
-        <button
-          onClick={handleSend}
-          className="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition"
-        >
-          Send
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default ChatBot;
+            <div style={{ display: "flex" }}>
+                <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    style={{
+                        flex: 1, padding: "10px", borderRadius: "5px",
+                        border: "none", outline: "none"
+                    }}
+                />
+                <button
+                    onClick={sendMessage}
+                    style={{
+                        marginLeft: "10px", padding: "10px 15px",
+                        background: "#E50914", color: "white",
+                        border: "none", borderRadius: "5px", cursor: "pointer"
+                    }}
+                >
+                    Send
+                </button>
+            </div>
+        </div>
+    );
+}
