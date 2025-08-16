@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/AuthStore';
-import { isTokenExpired } from '../utils/checkTOken';
+import { isTokenExpired } from '../utils/CheckToken';
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('');
